@@ -4,6 +4,7 @@ const {logger} = require("firebase-functions/v2");
 const admin=require('firebase-admin')
 const { createEvent } = require('./googlemeet');
 const functions = require('firebase-functions');
+var generator = require('generate-password');
 admin.initializeApp();
 
 exports.createGoogleMeetLink =onCall(async (request) => {
@@ -36,11 +37,14 @@ exports.createUserAndAssignRole = onCall(async (request) => {
               "called while authenticated.");
     }
     const { data } = request;
-
+    var password = generator.generate({
+      length: 10,
+      numbers: true
+    });
 
     const userRecord =  await admin.auth().createUser({
-      email: "parent@parent.com",
-      password: "12345678",
+      email: data.email,
+      password: password,
     });
     await admin.auth().setCustomUserClaims(userRecord.uid, { role: "parent" });
     const parentData = {
@@ -49,9 +53,9 @@ exports.createUserAndAssignRole = onCall(async (request) => {
     };
     await admin.firestore().collection('Parents').doc(userRecord.uid).set(parentData);
 
-    logger.info("User created and assigned role:", { uid: userRecord.uid });
+    logger.info("User created and assigned role");
 
-    return { success: true, uid: userRecord.uid, data: data };
+    return { success: true, uid: userRecord.uid, data: data, password:password};
   } catch (error) {
     // Log error message
     logger.error("Error creating user and assigning role:", error);

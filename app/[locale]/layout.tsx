@@ -6,7 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
 import {NextIntlClientProvider, useMessages} from 'next-intl';
 import { unstable_setRequestLocale } from "next-intl/server";
-
+import { Toaster as Sonner } from "@/components/ui/sonner"
 const APP_NAME = "PWA App";
 const APP_DEFAULT_TITLE = "My Awesome PWA App";
 const APP_TITLE_TEMPLATE = "%s - PWA App";
@@ -74,6 +74,7 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children,  params: {locale} }) 
         disableTransitionOnChange>
           {children}
           <Toaster />
+          <Sonner/>
           </ThemeProvider>
 </NextIntlClientProvider>   
     </body>

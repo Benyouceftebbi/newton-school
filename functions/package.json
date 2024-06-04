@@ -16,6 +16,7 @@
     "@googleapis/calendar": "^9.7.3",
     "firebase-admin": "^12.1.1",
     "firebase-functions": "^5.0.1",
+    "generate-password": "^1.7.1",
     "google-auth-library": "^9.10.0",
     "googleapis": "^137.1.0"
   },

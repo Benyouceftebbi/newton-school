@@ -22,7 +22,6 @@ import { useForm } from "react-hook-form";
 import { ParentRegistrationSchema } from "@/validators/parentSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useCallback, useState} from "react";
-import { useToast } from "@/components/ui/use-toast";
 import CalendarDatePicker from "../../students/components/date-picker";
 import { ScrollArea} from "@/components/ui/scroll-area";
 import ImageUpload from "../../students/components/uploadFile";
@@ -35,6 +34,7 @@ import { uploadFilesAndLinkToCollection } from "@/context/admin/hooks/useUploadF
 import { useTranslations } from "next-intl";
 import { functions } from "@/firebase/firebase-config";
 import { getFunctions, httpsCallable } from "firebase/functions";
+import { toast } from "sonner";
 const fieldNames = [
   "firstName",
   "lastName",
@@ -87,7 +87,7 @@ type FormKeys =
   }
 
  function ParentForm() {
-  const { toast } = useToast();
+
   const [filesToUpload, setFilesToUpload] = useState<FileUploadProgress[]>([]);
   const {setParents}=useData()
   const [openGender, setOpenGender] = useState(false);
@@ -164,11 +164,14 @@ type FormKeys =
           label: `${data.firstName} ${data.lastName}`, documents: uploaded },...prev
         ]);
     
-        toast({
-          title: t('changes-applied-1'),
-          description: t(`changes-applied-Successfully`),
+        toast("Parent Created",{
+    description: `Parent account created successfully.\n\nEmail: ${data.parentEmail}\nPassword: ${parentadded.data.password}\n\nPlease save this information as the password will not be stored.`,
+          action: {
+            label: "Copy Password",
+            onClick: () =>  navigator.clipboard.writeText(parentadded.data.password),
+          },
+
         });
-        console.log(data);
         reset();
       }
      
